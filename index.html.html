@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiz NR 35</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#F5B800">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Quiz NR 35">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+
+/* Layout: uma coluna de bolso, faixa de sinalização zebrada no topo, cartão de pergunta com alternativas grandes para o polegar */
+:root{
+  --bg:#F4F3EF; --surface:#FFFFFF; --ink:#1C1D1F; --muted:#5D5F63; --line:#DAD8D1;
+  --hazard:#F5B800; --hazard-ink:#1C1D1F;
+  --ok:#1F7A3D; --ok-bg:#E3F2E7; --bad:#B42318; --bad-bg:#FBE6E3;
+  --display:"Barlow Condensed","Arial Narrow",Impact,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141518; --surface:#1E2024; --ink:#ECEBE6; --muted:#A3A5AA; --line:#33363C;
+  --hazard:#F5B800; --hazard-ink:#141518;
+  --ok:#5CC981; --ok-bg:#16301F; --bad:#FF8A7A; --bad-bg:#3A1A17; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141518; --surface:#1E2024; --ink:#ECEBE6; --muted:#A3A5AA; --line:#33363C;
+  --hazard:#F5B800; --hazard-ink:#141518;
+  --ok:#5CC981; --ok-bg:#16301F; --bad:#FF8A7A; --bad-bg:#3A1A17; color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.45;
+  -webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--hazard)}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 32px}
+.stripe{height:12px;background:repeating-linear-gradient(-45deg,var(--hazard) 0 14px,var(--hazard-ink) 14px 28px)}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px 10px;
+  display:flex;flex-direction:column;gap:8px}
+.toprow{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.tag{font-family:var(--display);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:14px;color:var(--muted)}
+.count{font-family:var(--display);font-weight:800;font-size:20px;font-variant-numeric:tabular-nums}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:var(--hazard);transition:width .3s}
+
+h1{font-family:var(--display);font-weight:800;font-size:clamp(40px,12vw,58px);line-height:.95;
+  text-transform:uppercase;margin:24px 0 12px;text-wrap:balance}
+h1 em{font-style:normal;background:var(--hazard);color:var(--hazard-ink);padding:0 .12em}
+.lead{color:var(--muted);margin:0 0 20px;max-width:34em}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 24px}
+.fact{border:2px solid var(--ink);padding:10px 8px;text-align:center}
+.fact b{display:block;font-family:var(--display);font-size:28px;line-height:1;font-variant-numeric:tabular-nums}
+.fact small{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+
+label.fl{display:block;font-weight:600;margin-bottom:6px}
+input[type=text]{width:100%;font:inherit;padding:14px;border:2px solid var(--line);border-radius:6px;
+  background:var(--surface);color:var(--ink)}
+input[type=text]:focus{outline:none;border-color:var(--hazard)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+.mode{font:inherit;text-align:left;padding:14px;border:2px solid var(--line);border-radius:6px;background:var(--surface);
+  color:var(--ink);cursor:pointer}
+.mode b{display:block;font-family:var(--display);font-size:22px;text-transform:uppercase}
+.mode span{font-size:14px;color:var(--muted)}
+.mode[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 2px var(--hazard)}
+
+.btn{display:block;width:100%;font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:.04em;
+  text-transform:uppercase;padding:16px;border:0;border-radius:6px;background:var(--hazard);color:var(--hazard-ink);cursor:pointer;
+  min-height:56px}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn:focus-visible,.mode:focus-visible,.opt:focus-visible{outline:3px solid var(--hazard);outline-offset:2px}
+
+.module{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:14px;
+  display:inline-block;background:var(--ink);color:var(--bg);padding:3px 8px;margin-top:16px}
+.q{font-family:var(--display);font-weight:700;font-size:clamp(25px,7vw,30px);line-height:1.12;margin:12px 0 18px;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.opt{width:100%;display:flex;gap:12px;align-items:flex-start;text-align:left;font:inherit;color:var(--ink);
+  background:var(--surface);border:2px solid var(--line);border-radius:6px;padding:14px;cursor:pointer;min-height:56px}
+.opt .k{flex:none;width:30px;height:30px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:50%;
+  font-family:var(--display);font-weight:800;font-size:17px}
+.opt .t{min-width:0;padding-top:2px}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.right .k{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.wrong .k{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.opt[disabled]{cursor:default}
+.opt.dim{opacity:.55}
+
+.fb{margin:16px 0;padding:14px 16px;border-left:6px solid var(--ok);background:var(--surface);border-radius:0 6px 6px 0}
+.fb.no{border-color:var(--bad)}
+.fb h3{margin:0 0 4px;font-family:var(--display);font-size:22px;text-transform:uppercase;color:var(--ok)}
+.fb.no h3{color:var(--bad)}
+.fb p{margin:0}
+.fb .src{margin-top:8px;font-size:13px;color:var(--muted)}
+.foot{position:sticky;bottom:0;background:var(--bg);padding-block:12px calc(12px + env(safe-area-inset-bottom,0px))}
+
+.score{margin:24px 0 8px;border:3px solid var(--ink);background:var(--surface)}
+.score .hd{background:var(--hazard);color:var(--hazard-ink);font-family:var(--display);font-weight:800;text-transform:uppercase;
+  letter-spacing:.06em;padding:8px 14px;font-size:16px}
+.score .bd{padding:16px 14px;display:flex;flex-direction:column;gap:6px}
+.big{font-family:var(--display);font-weight:800;font-size:72px;line-height:.9;font-variant-numeric:tabular-nums}
+.big small{font-size:32px;color:var(--muted)}
+.verdict{font-family:var(--display);font-weight:700;font-size:24px;text-transform:uppercase}
+.meta{font-size:14px;color:var(--muted)}
+h2{font-family:var(--display);font-size:26px;text-transform:uppercase;margin:28px 0 10px}
+.rev{display:flex;flex-direction:column;gap:10px}
+.ri{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.ri p{margin:0 0 6px}
+.ri .a{font-size:15px}
+.ri .a b{color:var(--ok)}
+.ri .y{font-size:15px;color:var(--bad)}
+.stack{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+.closing{margin-top:28px;font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+.comic{margin:14px 0 0;display:grid;gap:8px}
+.comic svg{display:block;width:100%;height:auto;max-width:100%}
+.case{margin:12px 0 0;font-size:16px;color:var(--ink);background:var(--surface);border:1px solid var(--line);
+  border-radius:6px;padding:10px 12px}
+.case b{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:13px;color:var(--muted);display:block}
+.ri svg{display:block;width:100%;max-width:260px;height:auto;margin-bottom:8px}
+.send{margin:12px 0 0;padding:12px 14px;border-radius:6px;font-weight:600;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.send.wait{background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+.send.ok{background:var(--ok-bg);color:var(--ok)}
+.send.no{background:var(--bad-bg);color:var(--bad)}
+.send button{font:inherit;font-weight:700;padding:8px 14px;border-radius:6px;border:2px solid currentColor;background:transparent;color:inherit;cursor:pointer}
+.err{color:var(--bad);font-size:15px;margin:6px 0 0}
+@media (prefers-reduced-motion:reduce){.bar span{transition:none}}
+</style>
+</head>
+<body>
+<div class="stripe" aria-hidden="true"></div>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ---------- Envio das respostas para a planilha do Google ---------- */
+const PLANILHA_URL="https://script.google.com/macros/s/AKfycbzlPq6DtGVcw-xN7c-x2_jGZwh5ECOQjhbcwkmfxoG9Peb3Se-qFFBSRbKTyevVgRXi7g/exec";
+function enviarResultado(dados){
+  return fetch(PLANILHA_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(dados)});
+}
+/* ---------- Motor de quadrinhos (SVG desenhado no próprio app) ---------- */
+const K="#1C1D1F", ORG="#E8590C", SLAB="#C9CDD1", WALL="#DADDE0", SKIN=["#E9B48A","#B97A4F","#8A5A3C","#F1C9A5"];
+let PID=0;
+const FONT='font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="700"';
+
+function W(x,y,o={}){
+  const s=o.flip?-1:1, p=o.pose||"stand";
+  const legs = o.legs==="walk"?"M-10,0 L0,-26 L9,-1": o.hang?"M-6,5 L0,-26 L4,7":"M-7,0 L0,-26 L7,0";
+  const arms = {
+    stand:"M-8,-46 L-12,-28 M8,-46 L12,-28", reach:"M-8,-46 L-12,-28 M8,-46 L22,-60",
+    point:"M-8,-46 L-12,-28 M8,-46 L27,-52", carry:"M-8,-46 L10,-36 M8,-46 L16,-36",
+    box:"M-8,-46 L10,-38 M8,-46 L16,-38", head:"M-8,-46 L-12,-28 M8,-46 Q16,-60 7,-68",
+    cross:"M-9,-44 L8,-37 M9,-44 L-8,-37", up:"M-8,-46 L-4,-80 M8,-46 L4,-80",
+    hold:"M-8,-46 L-14,-70 M8,-46 L14,-70", clip:"M-8,-46 L-12,-28 M8,-46 L18,-40"
+  }[p];
+  const extra = {
+    carry:`<rect x="4" y="-42" width="34" height="6" fill="#C68B4E" stroke="${K}" stroke-width="2"/>`,
+    box:`<rect x="6" y="-50" width="22" height="18" fill="#C68B4E" stroke="${K}" stroke-width="2"/>`,
+    hold:`<rect x="-26" y="-76" width="52" height="6" fill="#9AA3AD" stroke="${K}" stroke-width="2"/>`,
+    clip:`<rect x="14" y="-54" width="16" height="20" fill="#F0EAD6" stroke="${K}" stroke-width="2"/><text x="22" y="-40" text-anchor="middle" font-size="8" ${FONT} fill="${K}">PT</text>`
+  }[p]||"";
+  const m=o.mood||"ok";
+  let face=`<circle cx="3" cy="-61" r="1.5" fill="${K}"/><circle cx="7" cy="-61" r="1.5" fill="${K}"/>`;
+  if(m==="dizzy") face=`<path d="M1,-63 L5,-59 M5,-63 L1,-59 M6,-63 L9,-59 M9,-63 L6,-59" stroke="${K}" stroke-width="1.4"/>`;
+  const mouth={ok:"M2,-55 Q5,-52 8,-55",worried:"M2,-54 Q5,-57 8,-54",dizzy:"M3,-54 Q5,-56 7,-54",firm:"M2,-55 L8,-55"}[m];
+  const sweat = (m==="worried"||m==="dizzy")?`<path d="M-13,-66 Q-16,-60 -13,-58 Q-10,-60 -13,-66Z" fill="#6EC1E4" stroke="${K}" stroke-width="1"/>`:"";
+  const spin = m==="dizzy"?`<path d="M-6,-80 q4,-6 8,0 q4,6 8,0" stroke="${K}" stroke-width="1.6" fill="none"/>`:"";
+  const old = o.old?`<path d="M1,-57 Q5,-54 9,-57" stroke="#8C8C8C" stroke-width="3" fill="none"/>`:"";
+  const harness = o.h?`<path d="M-7,-49 L6,-29 M7,-49 L-6,-29 M-8,-27 L8,-27" stroke="${ORG}" stroke-width="3" fill="none"/>`:"";
+  return `<g transform="translate(${x},${y}) scale(${s},1)">
+    <path d="${legs}" stroke="#34404E" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <rect x="-8" y="-50" width="16" height="26" rx="4" fill="${o.shirt||"#2F6FB0"}" stroke="${K}" stroke-width="2.5"/>
+    ${harness}
+    <path d="${arms}" stroke="${K}" stroke-width="4" stroke-linecap="round" fill="none"/>
+    ${extra}
+    <circle cx="0" cy="-60" r="9" fill="${o.skin||SKIN[0]}" stroke="${K}" stroke-width="2.5"/>
+    ${face}<path d="${mouth}" stroke="${K}" stroke-width="1.6" fill="none"/>${old}${sweat}${spin}
+    <path d="M-10,-63 A10,10 0 0 1 10,-63 Z" fill="${o.hat||"#F5B800"}" stroke="${K}" stroke-width="2.5"/>
+    <path d="M-11,-63 L14,-63" stroke="${K}" stroke-width="3" stroke-linecap="round"/>
+  </g>`;
+}
+const lan=(x1,y1,x2,y2,sag=10)=>`<path d="M${x1},${y1} Q${(x1+x2)/2},${Math.max(y1,y2)+sag} ${x2},${y2}" stroke="${ORG}" stroke-width="3" fill="none"/>`;
+const ring=(x,y)=>`<circle cx="${x}" cy="${y}" r="5" fill="none" stroke="${K}" stroke-width="3"/>`;
+function balloon(x,y,w,lines,tx,ty){
+  const h=lines.length*15+12, below=ty>y+h, by=below?y+h:y;
+  const bx=Math.min(Math.max(tx,x+18),x+w-18);
+  return `<polygon points="${bx-8},${by} ${bx+8},${by} ${tx},${ty}" fill="#fff" stroke="${K}" stroke-width="2.5" stroke-linejoin="round"/>
+  <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="13" fill="#fff" stroke="${K}" stroke-width="2.5"/>
+  <line x1="${bx-6}" y1="${by+(below?-1.3:1.3)}" x2="${bx+6}" y2="${by+(below?-1.3:1.3)}" stroke="#fff" stroke-width="3.5"/>
+  ${lines.map((l,i)=>`<text x="${x+w/2}" y="${y+20+i*15}" text-anchor="middle" font-size="14" ${FONT} fill="${K}">${l}</text>`).join("")}`;
+}
+const caption=t=>`<rect x="6" y="6" width="${t.length*7.3+18}" height="20" fill="#F5B800" stroke="${K}" stroke-width="2"/><text x="14" y="20" font-size="11.5" ${FONT} letter-spacing=".6" fill="${K}">${t.toUpperCase()}</text>`;
+function burst(x,y){let pts=[];for(let i=0;i<16;i++){const r=i%2?8:16,a=i*Math.PI/8;pts.push((x+r*Math.cos(a)).toFixed(1)+","+(y+r*Math.sin(a)).toFixed(1))}
+  return `<polygon points="${pts.join(" ")}" fill="#E5484D" stroke="${K}" stroke-width="2"/><text x="${x}" y="${y+5}" text-anchor="middle" font-size="15" ${FONT} fill="#fff">!</text>`;}
+const slab=(x0,x1,y)=>`<rect x="${x0}" y="${y+12}" width="${x1-x0}" height="${200-y}" fill="${WALL}" stroke="${K}" stroke-width="2.5"/><rect x="${x0}" y="${y}" width="${x1-x0}" height="12" fill="${SLAB}" stroke="${K}" stroke-width="2.5"/>`;
+const ground=(y,c="#D9C7A8")=>`<rect x="0" y="${y}" width="300" height="${200-y}" fill="${c}" stroke="${K}" stroke-width="2.5"/>`;
+function rain(){let s="";for(let r=0;r<6;r++)for(let x=10+(r%2)*9;x<300;x+=18){const y=10+r*30;s+=`<line x1="${x}" y1="${y}" x2="${x-6}" y2="${y+14}" stroke="#4A78A8" stroke-width="2" stroke-linecap="round"/>`}return s;}
+const wind=()=>[50,78,104].map(y=>`<path d="M8,${y} q30,-12 60,0 t60,0" stroke="#7D8A98" stroke-width="3" fill="none" stroke-linecap="round"/>`).join("");
+const sun=(x,y)=>`<circle cx="${x}" cy="${y}" r="16" fill="#FFD43B" stroke="${K}" stroke-width="2.5"/>`;
+
+function panel(inner,sky="#FFFFFF",label=""){
+  const id="d"+(++PID);
+  return `<svg viewBox="0 0 300 200" role="img" aria-label="${label}" xmlns="http://www.w3.org/2000/svg">
+  <defs><pattern id="${id}" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#000" opacity=".08"/></pattern></defs>
+  <rect width="300" height="200" fill="${sky}"/><rect width="300" height="200" fill="url(#${id})"/>
+  ${inner}<rect x="2" y="2" width="296" height="196" fill="none" stroke="${K}" stroke-width="4"/></svg>`;
+}
+
+const SCENES = {
+ laje:()=>[panel(`${slab(0,212,144)}
+   ${[24,48,72,96,120,144,168].map(x=>`<line x1="${x}" y1="144" x2="${x}" y2="126" stroke="#8A5A3C" stroke-width="2"/>`).join("")}
+   <line x1="20" y1="132" x2="172" y2="132" stroke="#8A5A3C" stroke-width="2"/>
+   <line x1="212" y1="192" x2="300" y2="192" stroke="${K}" stroke-width="2"/><rect x="250" y="184" width="22" height="8" rx="2" fill="#5B8DB8" stroke="${K}" stroke-width="1.5"/>
+   ${W(190,144,{pose:"carry"})}${burst(268,128)}
+   ${balloon(18,38,140,["É rapidinho,","nem precisa de","proteção!"],180,90)}${caption("4º andar · 7h10")}`,"#DCEFFB","Trabalhador carregando tábua na borda da laje sem guarda-corpo")],
+ chuva:()=>[
+   panel(`${sun(255,42)}${slab(0,300,144)}<rect x="76" y="104" width="8" height="40" fill="#7A7F86" stroke="${K}" stroke-width="2"/>${ring(80,100)}
+     ${lan(160,98,80,100,14)}${W(160,144,{h:1,pose:"reach"})}${balloon(168,52,118,["Ancorado e","com PT!"],168,80)}${caption("10h · sol")}`,"#DCEFFB","Trabalhador ancorado com tempo bom"),
+   panel(`${rain()}${wind()}${slab(0,300,144)}<rect x="76" y="104" width="8" height="40" fill="#7A7F86" stroke="${K}" stroke-width="2"/>${ring(80,100)}
+     ${lan(160,98,80,100,14)}${W(160,144,{h:1,mood:"worried"})}${balloon(160,36,130,["Falta pouco,","vou terminar!"],166,78)}${caption("10h40 · chuva e vento")}`,"#B9C2CC","Começa a chover e ventar; trabalhador quer terminar")],
+ tontura:()=>[panel(`${ground(170)}
+   <line x1="226" y1="170" x2="226" y2="0" stroke="${K}" stroke-width="3"/><line x1="254" y1="170" x2="254" y2="0" stroke="${K}" stroke-width="3"/>
+   ${[156,136,116,96,76,56,36,16].map(y=>`<line x1="226" y1="${y}" x2="254" y2="${y}" stroke="${K}" stroke-width="3"/>`).join("")}
+   ${W(66,170,{pose:"clip",shirt:"#4E5D6C",hat:"#FFFFFF",skin:SKIN[1]})}${W(178,170,{pose:"head",mood:"dizzy",flip:1,h:1})}
+   ${balloon(6,34,108,["Sobe aí,","é rapidinho."],64,100)}${balloon(140,30,82,["Tô tonto,","mas o ASO","tá em dia!"],176,98)}${caption("início do turno")}`,"#EAF4FB","Trabalhador tonto ao pé da escada; supervisor com a PT manda subir")],
+ cano:()=>[panel(`${slab(0,300,144)}<rect x="236" y="94" width="7" height="50" fill="#EDEDED" stroke="${K}" stroke-width="2"/>
+   <path d="M237,112 l4,4 l-3,3" stroke="${K}" stroke-width="1.4" fill="none"/>${lan(170,98,240,98,10)}
+   ${W(170,144,{h:1,pose:"reach"})}${burst(270,84)}${balloon(14,40,120,["Esse cano","aguenta!"],160,82)}${caption("ponto de ancoragem?")}`,"#DCEFFB","Trabalhador prende o talabarte num cano de PVC")],
+ chave:()=>[panel(`${slab(0,175,85)}${[20,70,120].map(x=>`<rect x="${x}" y="115" width="26" height="24" fill="#AFC6DA" stroke="${K}" stroke-width="2"/>`).join("")}
+   ${ground(188)}${W(135,85,{pose:"reach",mood:"worried"})}
+   <line x1="190" y1="96" x2="190" y2="112" stroke="${K}" stroke-width="2"/><line x1="198" y1="100" x2="198" y2="114" stroke="${K}" stroke-width="2"/>
+   <g transform="translate(194,130) rotate(35)"><rect x="-3" y="-12" width="6" height="22" fill="#9AA3AD" stroke="${K}" stroke-width="2"/><circle cx="0" cy="-14" r="6" fill="#9AA3AD" stroke="${K}" stroke-width="2"/></g>
+   ${W(238,188,{pose:"box",flip:1,skin:SKIN[2],old:1})}${balloon(180,10,110,["Opa! A chave","escapou!"],148,30)}${caption("sem isolamento")}`,"#EAF4FB","Ferramenta cai do andar de cima sobre área sem isolamento")],
+ suspenso:()=>[panel(`${ground(186)}<rect x="30" y="34" width="240" height="14" fill="#6B7280" stroke="${K}" stroke-width="2.5"/>
+   ${ring(170,54)}<line x1="170" y1="59" x2="170" y2="72" stroke="${ORG}" stroke-width="3"/>
+   ${W(170,150,{h:1,pose:"up",mood:"dizzy",hang:1})}${W(58,186,{pose:"point",skin:SKIN[1]})}
+   ${balloon(6,56,124,["Calma! Vamos","esperar os","bombeiros..."],60,110)}${caption("suspenso há 10 min")}`,"#EAF4FB","Trabalhador suspenso pelo cinto enquanto colega diz para esperar")],
+ poco:()=>[panel(`${slab(0,300,154)}<rect x="210" y="54" width="70" height="146" fill="#26282C" stroke="${K}" stroke-width="3"/>
+   <path d="M216,60 L216,194 M274,60 L274,194" stroke="#44474D" stroke-width="2"/>
+   ${W(160,154,{pose:"box",legs:"walk"})}${burst(245,100)}${balloon(10,46,136,["Deixo o material","lá dentro..."],150,96)}${caption("poço do elevador")}`,"#EAF4FB","Trabalhador caminha para o vão aberto do poço do elevador")],
+ pe:()=>[panel(`${slab(0,250,144)}${ring(108,140)}${lan(190,98,108,136,30)}${W(190,144,{h:1})}
+   ${balloon(18,36,118,["Tô preso,","tá seguro!"],180,82)}${caption("onde foi ancorado?")}`,"#DCEFFB","Talabarte ancorado num ponto no piso, na altura dos pés")],
+ forro:()=>[panel(`<rect x="0" y="0" width="300" height="30" fill="${SLAB}" stroke="${K}" stroke-width="2.5"/>
+   <rect x="0" y="30" width="170" height="7" fill="#FFFFFF" stroke="${K}" stroke-width="2"/>${slab(0,232,150)}
+   ${[30,90,150].map(x=>`<line x1="${x}" y1="150" x2="${x}" y2="110" stroke="${K}" stroke-width="3"/>`).join("")}
+   <line x1="30" y1="114" x2="150" y2="114" stroke="${K}" stroke-width="3"/><line x1="30" y1="130" x2="150" y2="130" stroke="${K}" stroke-width="3"/>
+   ${W(194,150,{pose:"hold"})}${burst(262,120)}
+   ${balloon(8,44,138,["Só vou tirar o","guarda-corpo pra","encaixar o forro."],180,96)}${caption("varanda · 8º andar")}`,"#DCEFFB","Trabalhador remove o guarda-corpo provisório da varanda")],
+ fita:()=>[panel(`<rect x="0" y="100" width="300" height="34" fill="${ORG}" stroke="${K}" stroke-width="2.5"/>
+   <line x1="0" y1="106" x2="300" y2="106" stroke="#FFD8A8" stroke-width="1.5" stroke-dasharray="5 4"/><line x1="0" y1="128" x2="300" y2="128" stroke="#FFD8A8" stroke-width="1.5" stroke-dasharray="5 4"/>
+   <rect x="148" y="98" width="44" height="38" fill="#FFFFFF"/>
+   ${[0,1,2,3,4,5,6,7].map(i=>`<path d="M${150+i*5},100 l3,8 l-3,8 l3,8 l-3,8 l2,4" stroke="${ORG}" stroke-width="1.6" fill="none"/>`).join("")}
+   <rect x="48" y="92" width="26" height="50" rx="3" fill="#A8B0B8" stroke="${K}" stroke-width="2.5"/>
+   <circle cx="170" cy="117" r="40" fill="none" stroke="${K}" stroke-width="6"/><line x1="198" y1="146" x2="236" y2="186" stroke="${K}" stroke-width="11" stroke-linecap="round"/>
+   ${balloon(12,34,136,["Tá meio gasto,","mas dá pro gasto."],6,90)}${caption("inspeção pré-uso")}`,"#F3F0E8","Fita do cinto paraquedista desfiada vista com lupa")],
+ cancela:()=>[panel(`${ground(186)}<line x1="40" y1="0" x2="40" y2="186" stroke="${K}" stroke-width="3"/><line x1="58" y1="0" x2="58" y2="186" stroke="${K}" stroke-width="3"/>
+   ${[0,1,2,3,4,5,6,7,8].map(i=>`<line x1="40" y1="${i*22}" x2="58" y2="${i*22+22}" stroke="${K}" stroke-width="1.6"/>`).join("")}
+   <rect x="58" y="70" width="132" height="80" fill="#F5B800" stroke="${K}" stroke-width="3"/>
+   <polygon points="190,74 232,64 232,140 190,150" fill="none" stroke="${K}" stroke-width="2.5"/>
+   <path d="M204,71 L204,147 M218,67 L218,144" stroke="${K}" stroke-width="1.5"/>
+   ${W(120,150,{pose:"point",skin:SKIN[3]})}
+   <path d="M262,90 l0,-30 m-8,8 l8,-8 l8,8 M262,150 l0,-30 m-8,8 l8,-8 l8,8" stroke="${K}" stroke-width="3" fill="none" stroke-linecap="round"/>
+   ${balloon(130,6,124,["Deixa a cancela","aberta, ganha","tempo!"],130,80)}${caption("cremalheira")}`,"#EAF4FB","Elevador cremalheira subindo com a cancela aberta")],
+ veterano:()=>[panel(`${ground(176)}${[210,240,270].map(x=>`<line x1="${x}" y1="40" x2="${x}" y2="176" stroke="#7A7F86" stroke-width="4"/>`).join("")}
+   ${[60,100,140].map(y=>`<line x1="200" y1="${y}" x2="290" y2="${y}" stroke="#7A7F86" stroke-width="4"/>`).join("")}
+   ${W(84,176,{pose:"cross",old:1,skin:SKIN[1]})}${W(176,176,{flip:1,mood:"worried",h:1,skin:SKIN[3]})}
+   ${balloon(6,36,128,["20 anos subindo","sem cinto e","nunca caí!"],86,100)}${balloon(150,30,96,["E se cair","hoje?"],176,100)}${caption("café da manhã")}`,"#FFF7E0","Trabalhador veterano se gaba de nunca usar cinto")],
+ recusa:()=>[panel(`${ground(186)}<rect x="196" y="96" width="104" height="90" fill="${WALL}" stroke="${K}" stroke-width="2.5"/>
+   <polygon points="186,96 248,56 300,96" fill="#B5523B" stroke="${K}" stroke-width="2.5"/>
+   ${W(58,186,{pose:"point",shirt:"#4E5D6C",hat:"#FFFFFF"})}${W(146,186,{pose:"cross",flip:1,mood:"firm",skin:SKIN[2]})}
+   ${balloon(6,36,112,["Sobe logo,","o prazo tá","apertado!"],58,112)}${balloon(126,30,140,["Sem linha de vida","eu não subo."],146,112)}${caption("telhado")}`,"#EAF4FB","Supervisor pressiona; trabalhador recusa subir sem linha de vida")],
+ balancim:()=>[panel(`<rect x="0" y="0" width="56" height="200" fill="${WALL}" stroke="${K}" stroke-width="2.5"/>${[30,90,150].map(y=>`<rect x="14" y="${y}" width="28" height="34" fill="#AFC6DA" stroke="${K}" stroke-width="2"/>`).join("")}
+   <line x1="84" y1="0" x2="84" y2="146" stroke="${K}" stroke-width="2.5"/><line x1="216" y1="0" x2="216" y2="146" stroke="${K}" stroke-width="2.5"/>
+   <rect x="70" y="146" width="160" height="10" fill="#9AA3AD" stroke="${K}" stroke-width="2.5"/>
+   <line x1="70" y1="118" x2="230" y2="118" stroke="${K}" stroke-width="2.5"/>
+   ${lan(150,100,216,94,8)}${W(150,146,{h:1,pose:"reach",skin:SKIN[1]})}
+   ${balloon(158,22,128,["Prendo no cabo","do balancim."],158,74)}${caption("fachada · balancim")}`,"#DCEFFB","Trabalhador no balancim prende o talabarte no cabo do próprio balancim")]
+};
+
+/* ---------- Banco de questões ---------- */
+const BANK = [
+ // Estudos de caso (com quadrinhos)
+ {c:"laje",m:"Estudo de caso · Lajes",n:"Zé chega cedo para montar fôrmas na borda da laje do 4º andar. O guarda-corpo ainda não foi instalado.",
+  q:"O que precisa acontecer antes de Zé começar?",
+  o:["Instalar guarda-corpo com rodapé e linha de vida para conectar o talabarte","Trabalhar agachado para ter mais equilíbrio","Fazer o serviço rápido, antes do movimento da obra","Pedir a um colega que o segure pela calça"],a:0,
+  e:"Antes de trabalhar na borda: proteção periférica (guarda-corpo e rodapé) e linha de vida horizontal. Pressa não elimina risco.",s:"Slides 6 e 13"},
+ {c:"chuva",m:"Estudo de caso · Análise de Risco",n:"A tarefa começou com sol, AR feita e PT assinada. Às 10h40 começa a chover e o vento aumenta.",
+  q:"Qual é a conduta correta?",
+  o:["Paralisar e reavaliar a AR na hora","Continuar, porque a AR já foi aprovada","Terminar e revisar a AR no dia seguinte","Só trocar o talabarte por um mais curto"],a:0,
+  e:"A AR é um documento vivo: cenário mudou, parou e reavaliou. Revisar é a etapa mais esquecida.",s:"Slide 23"},
+ {c:"tontura",m:"Estudo de caso · Permissão de Trabalho",n:"No início do turno, Paulo diz que está tonto. O treinamento e o ASO dele estão em dia, e o supervisor quer liberar.",
+  q:"Qual a decisão correta sobre a PT?",
+  o:["Não liberar Paulo: mal-estar ou vertigem impede o trabalho em altura","Liberar, porque o ASO é válido","Liberar se ele usar talabarte duplo","Liberar com um colega subindo junto"],a:0,
+  e:"Mal-estar ou vertigem é critério de não liberação da PT, mesmo com ASO e treinamento em dia.",s:"Slide 24"},
+ {c:"cano",m:"Estudo de caso · Ancoragem",n:"Sem ponto de ancoragem por perto, Márcio prende o talabarte num cano de PVC da instalação.",
+  q:"O que está errado?",
+  o:["O ponto é improvisado: precisa ser certificado, definido pela AR e suportar 1.500 kgf","Nada, ele está conectado","Só a cor do cano, que deveria ser amarela","Bastaria dar duas voltas no cano"],a:0,
+  e:"Ponto improvisado é critério de não liberação. A ancoragem é definida pela AR e verificada para 1.500 kgf.",s:"Slides 18 e 24"},
+ {c:"chave",m:"Estudo de caso · Queda de objetos",n:"Uma chave escapa da mão de quem trabalha no andar de cima. Seu Antônio passa embaixo carregando material.",
+  q:"Que medida teria protegido Seu Antônio?",
+  o:["Isolar e sinalizar a área abaixo do trabalho em altura","Pedir que ele ande mais rápido","Usar ferramentas mais leves","Gritar quando alguma coisa cair"],a:0,
+  e:"Ferramentas que caem de 10 m têm impacto letal. Quem trabalha embaixo está tão exposto quanto quem está em cima.",s:"Slides 9 e 22"},
+ {c:"suspenso",m:"Estudo de caso · Resgate",n:"Rafael caiu e ficou pendurado pelo cinto. Há 10 minutos a equipe só espera os bombeiros.",
+  q:"O que falhou nessa situação?",
+  o:["Faltou plano de resgate treinado: a suspensão inerte pode matar em menos de 15 minutos","Nada, o certo é sempre esperar os bombeiros","Deveriam cortar o talabarte","Rafael deveria balançar até a viga"],a:0,
+  e:"Antes de subir: como a equipe vai me retirar? Cordas de descida, vara de resgate e plano treinado no local.",s:"Slides 21 e 24"},
+ {c:"poco",m:"Estudo de caso · Poço de elevador",n:"Carlos leva caixas para perto do poço do elevador. A entrada do vão está totalmente aberta.",
+  q:"Que proteção faltou nesse vão?",
+  o:["Barreira física rígida e fixa de no mínimo 1,20 m em cada entrada do poço","Uma fita zebrada na entrada","Uma placa escrito Cuidado","Mais iluminação dentro do poço"],a:0,
+  e:"Cada entrada do poço deve ter barreira rígida de pelo menos 1,20 m, fixada para impedir acesso acidental.",s:"Slide 7"},
+ {c:"pe",m:"Estudo de caso · Talabarte",n:"Luís está de cinto paraquedista e prendeu o talabarte num ponto no piso, na altura dos pés.",
+  q:"A ancoragem de Luís está correta?",
+  o:["Não: deve ficar acima da cintura, de preferência acima da cabeça","Sim: o importante é estar conectado","Sim: ancorar no piso reduz a queda","Não: o certo é na altura do joelho"],a:0,
+  e:"Ancoragem baixa aumenta a altura de queda e o risco de bater em estrutura inferior.",s:"Slide 19"},
+ {c:"forro",m:"Estudo de caso · Varandas",n:"Para instalar o forro da varanda no 8º andar, Jorge tira o guarda-corpo provisório.",
+  q:"Qual regra Jorge descumpriu?",
+  o:["Nunca remover o guarda-corpo provisório sem outra retenção já instalada","Forro só pode ser instalado à noite","Guarda-corpo deve ser removido por dois trabalhadores","Nenhuma, o forro exige a remoção"],a:0,
+  e:"Na varanda, o guarda-corpo só sai se houver alternativa de retenção instalada (cinto de 5 pontos, talabarte duplo, ancoragem segura).",s:"Slide 7"},
+ {c:"fita",m:"Estudo de caso · Inspeção",n:"Na inspeção pré-uso, a equipe encontra a fita do cinto paraquedista desfiada.",
+  q:"Qual a decisão correta?",
+  o:["Não usar: fita desfiada é critério de não liberação","Usar hoje e trocar amanhã","Cobrir o desgaste com fita isolante","Usar se o serviço for abaixo de 5 m"],a:0,
+  e:"Fita desfiada, trava emperrada ou ponto improvisado: a PT não é liberada.",s:"Slides 3 e 24"},
+ {c:"cancela",m:"Estudo de caso · Cremalheira",n:"Para agilizar, o operador sobe o elevador cremalheira com a cancela aberta.",
+  q:"Que tipo de risco essa atitude representa?",
+  o:["Operação humana","Erro de instalação","Mecânica e desgaste","Excesso de carga"],a:0,
+  e:"Cancelas abertas com o elevador em movimento são falha de operação humana, junto com falta de capacitação e checklist negligenciado.",s:"Slides 8 e 16"},
+ {c:"veterano",m:"Estudo de caso · Comportamento",n:"No café, Seu Valdir conta que sobe sem cinto há 20 anos e nunca caiu.",
+  q:"Qual lição da aula responde a ele?",
+  o:["Experiência não substitui controle","Quem tem experiência pode dispensar o cinto","Só iniciantes precisam de proteção","Se nunca caiu, o risco é baixo"],a:0,
+  e:"O jeitinho é o inimigo: a causa raiz costuma ser a tolerância a pequenos desvios acumulados.",s:"Slide 13"},
+ {c:"recusa",m:"Estudo de caso · Direito de recusa",n:"O telhado não tem linha de vida. O supervisor manda subir por causa do prazo, e Diego se recusa.",
+  q:"A atitude de Diego está correta?",
+  o:["Sim: é o direito de recusa diante de proteção inadequada","Não: deve obedecer ao supervisor","Não: deveria subir e reclamar depois","Só se o telhado tiver mais de 10 m"],a:0,
+  e:"Se não estiver 100% seguro, ninguém sobe. O direito de recusa vale sem hesitação.",s:"Slide 3"},
+ {c:"balancim",m:"Estudo de caso · Fachadas",n:"No balancim, Wesley prende o talabarte no cabo de sustentação do próprio balancim.",
+  q:"Onde ele deveria estar conectado?",
+  o:["A uma linha de vida independente do balancim","Ao guarda-corpo do balancim","Ao mesmo cabo, mas com duas voltas","Não precisa, o balancim já tem trava"],a:0,
+  e:"O balancim deve ter dupla trava e o trabalhador fica ligado a uma linha de vida independente.",s:"Slide 6"},
+ // Conceitos (sem quadrinho)
+ {m:"Conceito",q:"A partir de qual diferença de nível a NR 35 se aplica, quando há risco de queda?",
+  o:["Acima de 2,0 m","Acima de 1,5 m","Acima de 3,0 m","Somente acima de 5,0 m"],a:0,
+  e:"A NR 35 vale para atividades com diferença de nível acima de 2,0 m onde exista risco de queda.",s:"Slide 5"},
+ {m:"Conceito",q:"Qual é a ordem correta de prioridade das medidas de proteção?",
+  o:["Eliminar a exposição → prevenir a queda → minimizar as consequências","Usar EPI → instalar guarda-corpo → evitar subir","Minimizar consequências → prevenir a queda → eliminar a exposição","Assinar a PT → usar o cinto → iniciar a tarefa"],a:0,
+  e:"Primeiro tenta-se fazer a tarefa no solo; depois vem a proteção coletiva; o EPI é o último recurso.",s:"Slides 3 e 5"},
+ {m:"Alerta",q:"Segundo a aula, com que frequência um trabalhador brasileiro morre por queda de altura?",
+  o:["A cada 3 dias","A cada 3 meses","Uma vez por ano","A cada 30 dias"],a:0,
+  e:"O dado apresentado é de uma morte por queda de altura a cada 3 dias no Brasil.",s:"Slide 2"},
+ {m:"Análise de Risco",q:"Quais são as 4 etapas do método de Análise de Risco (AR), em ordem?",
+  o:["Identificar, Antecipar, Controlar, Revisar","Planejar, Executar, Checar, Agir","Isolar, Sinalizar, Ancorar, Subir","Antecipar, Identificar, Revisar, Controlar"],a:0,
+  e:"O método AR segue: Identificar → Antecipar → Controlar → Revisar.",s:"Slide 23"},
+ {m:"Permissão de Trabalho",q:"O que acontece se UM item da checagem da PT estiver não conforme?",
+  o:["A PT não é assinada e o trabalho não começa","O supervisor assina com ressalva","O trabalho começa e o item é corrigido depois","Basta registrar o item na AR"],a:0,
+  e:"Autorização não é proteção: uma checagem não conforme impede a assinatura e o início do trabalho.",s:"Slide 24"},
+ {m:"Procedimentos",q:"Quais documentos são obrigatórios antes de iniciar qualquer atividade em altura?",
+  o:["APR e Permissão de Trabalho (PT)","Somente o ASO","Ordem de compra dos EPIs","Somente o certificado do curso"],a:0,
+  e:"A emissão da APR e da PT é obrigatória antes de iniciar as atividades.",s:"Slide 9"},
+ {m:"Ancoragem",q:"Quem estabelece o sistema de ancoragem a ser usado?",
+  o:["A Análise de Risco","O próprio trabalhador, na hora","O fabricante do cinto","O mestre de obras, verbalmente"],a:0,
+  e:"O sistema de ancoragem deve ser estabelecido pela Análise de Risco.",s:"Slide 18"},
+ {m:"EPI",q:"Qual tipo de cinto de segurança é exigido para trabalho em altura?",
+  o:["Paraquedista, com conexão ao sistema de ancoragem","Abdominal simples","Cinto de cintura com fivela","Qualquer cinto com certificado"],a:0,
+  e:"O cinto deve ser do tipo paraquedista e ter dispositivo para conexão ao sistema de ancoragem.",s:"Slide 18"},
+ {m:"EPI",q:"Por quanto tempo o trabalhador deve permanecer conectado ao sistema de ancoragem?",
+  o:["Durante todo o período de exposição ao risco de queda","Só na hora de subir e descer","Só quando estiver acima de 5 m","Apenas em dias de vento"],a:0,
+  e:"A conexão deve ser mantida durante todo o tempo de exposição ao risco.",s:"Slide 18"},
+ {m:"Zona Livre de Queda",q:"O que compõe o cálculo da Zona Livre de Queda (ZLQ)?",
+  o:["Talabarte + absorvedor aberto + distância máxima + altura de segurança","Altura do prédio ÷ 2","Peso do trabalhador × altura","Somente o comprimento do talabarte"],a:0,
+  e:"ZLQ = comprimento do talabarte + absorvedor de energia aberto + distância máxima + altura de segurança.",s:"Slide 10"},
+ {m:"Talabarte",q:"Que tipo de talabarte a etapa “Controlar” da AR indica?",
+  o:["Talabarte em Y duplo com absorvedor de energia","Corda simples amarrada à cintura","Talabarte único sem absorvedor","Fita de içamento de carga"],a:0,
+  e:"Na etapa Controlar define-se o talabarte em Y duplo com absorvedor, além de ancoragens certificadas.",s:"Slide 23"},
+ {m:"Poço de elevador",q:"Com que frequência se instala o assoalhamento provisório (tablado) no poço do elevador?",
+  o:["Em pavimentos intercalados, geralmente a cada duas ou três lajes","Somente no térreo","Só no último pavimento","Não é necessário se houver linha de vida"],a:0,
+  e:"Os tablados em pavimentos intercalados limitam a altura de uma eventual queda interna.",s:"Slide 7"},
+ {m:"Lajes",q:"Como tratar vãos de escada e poços de luz durante a construção de lajes?",
+  o:["Cobrir com tábuas travadas ou cercar com guarda-corpo rígido","Sinalizar apenas com fita zebrada","Deixar abertos para ventilação","Avisar os trabalhadores verbalmente"],a:0,
+  e:"Aberturas devem ser cobertas com tábuas resistentes travadas ou cercadas por guarda-corpo rígido.",s:"Slide 6"},
+ {m:"Checklist mental",q:"Qual destas NÃO é uma das três perguntas do checklist mental antes de subir?",
+  o:["Quanto tempo vou economizar sem a linha de vida?","O risco pode ser eliminado ou feito de outro modo?","O que pode me fazer perder equilíbrio, conexão ou apoio?","Como a equipe vai me retirar se eu ficar suspenso?"],a:0,
+  e:"As três perguntas são: Eliminação, Perda de apoio e Resgate rápido.",s:"Slide 21"},
+ {m:"Elevador cremalheira",q:"Quais normas a aula indica para mitigar riscos do elevador cremalheira?",
+  o:["NR 18 e ABNT NBR 16200","NR 10 e NR 12","NR 6 apenas","ABNT NBR 5410"],a:0,
+  e:"NR 18 (construção) e ABNT NBR 16200 (elevadores cremalheira), além de vistorias por engenheiros certificados.",s:"Slide 17"}
+];
+
+const CASES=BANK.filter(q=>q.c).length;
+const app=document.getElementById("app");
+const state={name:"",mode:"casos",list:[],i:0,picks:[]};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const L="ABCD";
+const comic=(q,first)=>q.c?SCENES[q.c]().slice(0,first?1:9).join(""):"";
+
+function build(){
+  const pool=state.mode==="casos"?BANK.filter(q=>q.c):BANK;
+  state.list=shuffle(pool).map(q=>{const order=shuffle(q.o.map((t,k)=>({t,k})));return{...q,opts:order,ans:order.findIndex(x=>x.k===q.a)};});
+  state.i=0;state.picks=[];question();
+}
+
+function start(){
+  PID=0;
+  app.innerHTML=`
+  <h1>Trabalho em <em>altura</em> não perdoa</h1>
+  <p class="lead">Quiz da aula “NR 35: O Perigo Invisível do Trabalho em Altura”. Cada estudo de caso mostra uma situação real de obra em quadrinhos: decida o que deveria ser feito.</p>
+  <div class="comic">${SCENES.recusa()[0]}</div>
+  <div class="facts" aria-label="Números da aula" style="margin-top:16px">
+    <div class="fact"><b>2,0 m</b><small>Altura NR 35</small></div>
+    <div class="fact"><b>1.500</b><small>kgf ancoragem</small></div>
+    <div class="fact"><b>&lt;15 min</b><small>Suspensão inerte</small></div>
+  </div>
+  <label class="fl" for="nome">Seu nome completo</label>
+  <input type="text" id="nome" autocomplete="name" placeholder="Ex.: João da Silva" value="${esc(state.name)}">
+  <p class="err" id="nomeErr" hidden>Digite seu nome completo para começar.</p>
+  <div class="modes" role="group" aria-label="Tipo de quiz">
+    <button class="mode" id="mC" aria-pressed="${state.mode==="casos"}"><b>Estudos de caso</b><span>${CASES} situações em quadrinhos</span></button>
+    <button class="mode" id="mA" aria-pressed="${state.mode==="todos"}"><b>Completo</b><span>${BANK.length} questões, casos e conceitos</span></button>
+  </div>
+  <button class="btn" id="go">Começar</button>
+  <p class="closing">Se não estiver 100% seguro, ninguém sobe.</p>`;
+  const mC=document.getElementById("mC"),mA=document.getElementById("mA");
+  mC.onclick=()=>{state.mode="casos";mC.setAttribute("aria-pressed","true");mA.setAttribute("aria-pressed","false")};
+  mA.onclick=()=>{state.mode="todos";mA.setAttribute("aria-pressed","true");mC.setAttribute("aria-pressed","false")};
+  document.getElementById("go").onclick=()=>{
+    const v=document.getElementById("nome").value.trim().replace(/\s+/g," ");
+    if(v.length<3){document.getElementById("nomeErr").hidden=false;document.getElementById("nome").focus();return;}
+    state.name=v;build();};
+}
+
+function question(){
+  const q=state.list[state.i],n=state.list.length;
+  app.innerHTML=`
+  <header class="top">
+    <div class="toprow"><span class="tag">Quiz NR 35</span><span class="count">${state.i+1}/${n}</span></div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${state.i}"><span style="width:${state.i/n*100}%"></span></div>
+  </header>
+  <span class="module">${esc(q.m)}</span>
+  ${q.c?`<div class="comic">${comic(q,false)}</div>`:""}
+  ${q.n?`<p class="case"><b>A situação</b>${esc(q.n)}</p>`:""}
+  <p class="q">${esc(q.q)}</p>
+  <ul class="opts">${q.opts.map((o,k)=>`<li><button class="opt" data-k="${k}"><span class="k">${L[k]}</span><span class="t">${esc(o.t)}</span></button></li>`).join("")}</ul>
+  <div id="fb"></div>
+  <div class="foot"><button class="btn" id="next" disabled>${state.i+1<n?"Próxima":"Ver resultado"}</button></div>`;
+  window.scrollTo(0,0);
+  const btns=[...app.querySelectorAll(".opt")];
+  btns.forEach(b=>b.onclick=()=>{
+    const k=+b.dataset.k,ok=k===q.ans;
+    state.picks[state.i]=k;
+    btns.forEach((x,j)=>{x.disabled=true;if(j===q.ans)x.classList.add("right");else if(j===k)x.classList.add("wrong");else x.classList.add("dim");});
+    document.getElementById("fb").innerHTML=`<div class="fb ${ok?"":"no"}" role="status">
+      <h3>${ok?"Correto":"Atenção"}</h3><p>${ok?"":`Resposta certa: <b>${esc(q.opts[q.ans].t)}</b>. `}${esc(q.e)}</p>
+      <p class="src">Referência: ${esc(q.s)} da aula</p></div>`;
+    const nx=document.getElementById("next");nx.disabled=false;
+    document.getElementById("fb").scrollIntoView({behavior:"smooth",block:"nearest"});
+  });
+  document.getElementById("next").onclick=()=>{state.i++;state.i<n?question():result();};
+}
+
+function result(){
+  const n=state.list.length,hits=state.list.filter((q,i)=>state.picks[i]===q.ans).length,pct=Math.round(hits/n*100);
+  const verdict=pct>=90?"Pronto para o campo":pct>=70?"Aprovado, revise os pontos abaixo":"Revise a aula antes de subir";
+  const now=new Date().toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short"});
+  const misses=state.list.map((q,i)=>({q,p:state.picks[i]})).filter(x=>x.p!==x.q.ans);
+  app.innerHTML=`
+  <div class="score"><div class="hd">Resultado · NR 35</div><div class="bd">
+    <div class="big">${hits}<small>/${n}</small></div><div class="verdict">${verdict}</div>
+    <div class="meta">${state.name?esc(state.name)+" · ":""}${pct}% de acertos · ${now}</div></div></div>
+  <div id="envio" class="send wait" role="status">Enviando seu resultado…</div>
+  ${misses.length?`<h2>Para revisar (${misses.length})</h2><div class="rev">${misses.map(({q,p})=>`
+    <div class="ri">${q.c?comic(q,true):""}<p><b>${esc(q.q)}</b></p>
+    <p class="y">Sua resposta: ${esc(q.opts[p].t)}</p><p class="a">Certa: <b>${esc(q.opts[q.ans].t)}</b></p>
+    <p class="meta">${esc(q.e)} (${esc(q.s)})</p></div>`).join("")}</div>`
+   :`<h2>Gabarito perfeito</h2><p>Você acertou todas. Leve essa atenção para cada turno.</p>`}
+  <div class="stack"><button class="btn" id="again">Refazer em nova ordem</button><button class="btn ghost" id="home">Voltar ao início</button></div>
+  <p class="closing">“Quando edificares uma casa nova, farás um parapeito em torno do terraço…” (Deuteronômio 22:8)</p>`;
+  window.scrollTo(0,0);
+  const dados={nome:state.name,acertos:hits,total:n,pct:pct,modo:state.mode==="casos"?"Estudos de caso":"Completo",
+    erros:misses.map(({q})=>q.q).join(" | ")||"Nenhuma"};
+  const box=document.getElementById("envio");
+  const tentar=()=>{
+    box.className="send wait";box.textContent="Enviando seu resultado…";
+    enviarResultado(dados).then(()=>{box.className="send ok";box.textContent="Resultado enviado. Pode fechar o quiz.";})
+    .catch(()=>{box.className="send no";box.innerHTML='Não foi possível enviar. Verifique a internet. <button id="reenviar">Tentar de novo</button>';
+      document.getElementById("reenviar").onclick=tentar;});
+  };
+  tentar();
+  document.getElementById("again").onclick=build;
+  document.getElementById("home").onclick=start;
+}
+start();
+</script>
+<script>
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}
+</script>
+</body>
+</html>
